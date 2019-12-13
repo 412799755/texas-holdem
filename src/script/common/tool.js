@@ -1,32 +1,29 @@
-// color:
-// 5:black joker 6:red joker
+// 点数14代表A
 const colorMap = { '1': '黑桃', '2': '梅花', '3': '红桃', '4': '方片', '5': '小王', '6': '大王' }
-function generateWholeCards (isJokerAdded) {
+export function generateWholeCards (isJokerAdded) {
     let arr = []
     for (let i = 1; i < 5; i++) {
-        for (let j = 1; j < 14; j++) {
+        for (let j = 2; j < 15; j++) {
             arr.push({
-                name: colorMap[i] + j,
+                name: colorMap[i] + (j % 14),
                 color: i,
                 num: j
             })
         }
     }
     if (isJokerAdded) {
-        arr.push(...[{ color: 5, name: colorMap[i] }, { color: 6, name: colorMap[i] }])
+        arr.push(...[{ color: 5, name: colorMap[5] }, { color: 6, name: colorMap[6] }])
     }
     return arr
 }
-function
-function Dealer (isJokerAdded) {
-    this.isJokerAdded = isJokerAdded
-    this.stack = generateWholeCards(isJokerAdded)
-    this.public = []
+//
+export function compare (cardA, cardB) {
+
 }
-Dealer.prototype.restart = function () {
-    this.stack = generateWholeCards(this.isJokerAdded)
+// 是否同花
+function isFlush (cardGroup) {
+    let color = cardGroup[0].color
+    return cardGroup.every(item => item.color === color)
 }
-Dealer.prototype.sendCards = function () {
-  this.stack = generateWholeCards(this.isJokerAdded)
-}
+
 

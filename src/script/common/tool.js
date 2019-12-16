@@ -18,10 +18,10 @@ const cardMap = [
 ]
 export function generateWholeCards (isJokerAdded) {
     let arr = []
-    colorMap.entities().forEach((color, colorName) => {
-        cardMap.forEach(({ num, cardName }) => {
+    Object.entries(colorMap).forEach(([color, colorName]) => {
+        cardMap.forEach(({ num, name }) => {
             arr.push({
-                name: colorName + cardName,
+                name: colorName + name,
                 color: color,
                 num: num
             })

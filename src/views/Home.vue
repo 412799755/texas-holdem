@@ -26,7 +26,11 @@ export default {
     },
     methods: {
         start () {
-            console.log(this.difficulty, this.peopleNumber)
+            this.$router.push({ name: 'game',
+                query: {
+                    peopleNumber: this.peopleNumber,
+                    difficulty: this.difficulty
+                } })
         }
     },
     components: {

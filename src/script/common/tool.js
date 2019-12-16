@@ -50,7 +50,7 @@ export function isStraight (cardGroup) {
     } else {
         let result = true
         cardGroup.reduce((prev, cur) => {
-            result = result && _fewer1(prev, cur)
+            result = result && _fewer1(prev.num, cur.num)
             return cur
         })
         return result
@@ -65,4 +65,37 @@ function _fewer1 (a, b) {
 // 是否A2345
 function _ace2345 (cardGroup) {
     return cardGroup.map(item => item.num) === [2, 3, 4, 5, 14]
+}
+
+// 是否四条
+export function isFourOfAKind (cardGroup) {
+    const countMap = _groupByAmount(cardGroup)
+    return countMap.some((name, amount) => amount === 4)
+}
+
+// 是否三条
+export function isThreeOfAKind (cardGroup) {
+    const countMap = _groupByAmount(cardGroup)
+    return countMap.some((name, amount) => amount === 3)
+}
+
+function _same (a, b) {
+    return a === b
+}
+
+function _groupByAmount (cardGroup) {
+    const countMap = {}
+    cardGroup.forEach(card => {
+        if (countMap[card.name]) {
+            return
+        }
+        let amount = 1
+        cardGroup.forEach(temp => {
+            if (_same(temp.num, card.num)) {
+                amount++
+            }
+        })
+        countMap[card.name] = amount
+    })
+    return countMap
 }

@@ -5,10 +5,10 @@
         <div v-for="(card,index) in dealer.publicCards" :key="index">{{card.name}}</div>
       </div>
       <div class="robots">
-        <player v-for="(player,index) in dealer.robots" :name="player.name" :cards="player.cards" :isRobot="true" :key="index"></player>
+        <player v-for="(player,index) in dealer.robots" :player="player"   :key="index"></player>
       </div>
       <div class="player">
-        <player :name="dealer.user.name" :cards="dealer.user.cards" :isRobot="false"></player>
+        <player  :player="dealer.user" ></player>
       </div>
     </div>
 </template>

@@ -1,9 +1,15 @@
 import { generateWholeCards } from './tool'
 import { Player } from './player'
+import { Strategy } from './strategy'
+
 export class Dealer {
     constructor ({ isJokerAdded, peopleNumber, difficulty }) {
         this.isJokerAdded = isJokerAdded
+        this.peopleNumber = peopleNumber
         this.restart()
+        this.startGame()
+    }
+    startGame (index = 0) {
         // 公共牌
         this.publicCards = this.deliver({
             split: 1,
@@ -14,7 +20,7 @@ export class Dealer {
             name: '玩家'
         })
         this.robots = []
-        for (let i = 1; i <= peopleNumber; i++) {
+        for (let i = 1; i <= this.peopleNumber; i++) {
             let robot = new Player({
                 cards: this.deliver({ split: 1, each: 2 })[0],
                 isRobot: true,
@@ -22,6 +28,7 @@ export class Dealer {
             })
             this.robots.push(robot)
         }
+        this.loop = new Strategy({ players: [this.user, ...this.robots], startIndex: index, maxTime: 30 })
     }
 
     restart () {

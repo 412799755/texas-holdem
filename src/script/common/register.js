@@ -5,6 +5,7 @@ const requireComponent = require.context(
     false,
     /\w+\.(vue|js)$/
 )
+console.log()
 requireComponent.keys().forEach(fileName => {
     // Get component config
     const componentConfig = requireComponent(fileName)

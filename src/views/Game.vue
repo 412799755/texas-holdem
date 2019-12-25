@@ -8,7 +8,7 @@
         <player v-for="(player,index) in dealer.robots" :player="player"   :key="index"></player>
       </div>
       <div class="player">
-        <player  :player="dealer.user" ></player>
+        <player  :player="dealer.user" :s="4" ></player>
       </div>
     </div>
 </template>

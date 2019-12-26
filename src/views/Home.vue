@@ -9,6 +9,7 @@
       <selects v-model="peopleNumber" :options="peopleNumberOptions"></selects>
     </div>
     <button @click="start">start</button>
+    <button @click="probability">probability</button>
   </div>
 </template>
 
@@ -27,6 +28,13 @@ export default {
     methods: {
         start () {
             this.$router.push({ name: 'game',
+                query: {
+                    peopleNumber: this.peopleNumber,
+                    difficulty: this.difficulty
+                } })
+        },
+        probability () {
+            this.$router.push({ name: 'probability',
                 query: {
                     peopleNumber: this.peopleNumber,
                     difficulty: this.difficulty

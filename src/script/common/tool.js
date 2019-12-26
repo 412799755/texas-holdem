@@ -17,7 +17,7 @@ const cardMap = [
     { num: 14, name: 'A' }
 ]
 const cardTypeJudge = [
-    { conditions: ['flush', 'straight'],
+    { conditions: ['straight', 'flush'],
         name: 'straightFlush',
         type: 8
     },
@@ -83,35 +83,54 @@ function judgeCardType (cardGroup) {
 }
 function judgeMaxCardType (type) {
     let obj = {
-        maxArr: []
+        maxArr: type['flush'].maxArr,
+        type: 0
     }
     for (let i = 0; i < cardTypeJudge.length; i++) {
         const judgeStrategy = cardTypeJudge[i]
         const isMatchAll = judgeStrategy['conditions'].every(item => {
             return type[item].isMatch
         })
-        if (isMatchAll) {
-            judgeStrategy['conditions'].forEach(item => {
-                obj.maxArr.push(type[item].maxArr)
-            })
+        if (isMatchAll && judgeStrategy['conditions'].length) {
+            obj.maxArr = type[judgeStrategy['conditions'][0]].maxArr
+            obj.type = judgeStrategy.type
             return obj
         }
     }
+    return obj
 }
 export function compare (cardA, cardB) {
-    const cardAType = judgeMaxCardType(judgeCardType(cardA))
-    const cardBType = judgeMaxCardType(judgeCardType(cardB))
+    const typeObjA = judgeCardType(cardA)
+    const typeObjB = judgeCardType(cardB)
+    const cardAType = judgeMaxCardType(typeObjA)
+    const cardBType = judgeMaxCardType(typeObjB)
     const typeA = cardAType.type
     const typeB = cardBType.type
-    const num1 = String(cardAType.maxArr).replace(/,/g, '')
-    const num2 = String(cardBType.maxArr).replace(/,/g, '')
     if (typeA > typeB) {
-        return '1'
+        return 1
     } else if (typeA < typeB) {
-        return '0'
+        return -1
     } else {
-        return num1 > num2 ? '1' : (num1 < num2 ? '0' : '2')
+        return compareArr(cardAType.maxArr, cardBType.maxArr)
     }
+}
+function compareArr (arr1, arr2) {
+    let len1 = arr1.length
+    let len2 = arr2.length
+    let result = 0
+    if (len1 !== len2) throw Error('the lengths of array are not equal')
+    for (let i = 0; i < len2; i++) {
+        const tmp1 = parseInt(arr1[i])
+        const tmp2 = parseInt(arr2[i])
+        if (tmp1 > tmp2) {
+            result = 1
+            break
+        } else if (tmp1 < tmp2) {
+            result = -1
+            break
+        }
+    }
+    return result
 }
 function getMaxCard (cardGroup) {
     return [Math.max(...cardGroup.map(item => item.num))]
@@ -151,25 +170,31 @@ function _ace2345 (cardGroup) {
     return cardGroup.map(item => item.num) === [2, 3, 4, 5, 14]
 }
 
-// 是否四条 todo return {isMatch:是否匹配，maxArr:[]最大值数组}
+//  return {isMatch:是否匹配，maxArr:[]最大值数组}
 export function isFourOfAKind (cardGroup) {
-  const countMap = _groupByAmount(cardGroup)
-  let isMatch = countMap.some((name, amount) => amount === 4)
-  return { isMatch, maxArr }
+    const countMap = _groupByAmount(cardGroup)
+    let isMatch = Object.entries(countMap).some(([name, amount]) => amount === 4)
+    let { maxArr } = _sortByAmount(countMap)
+    return { isMatch, maxArr }
 }
 
-// 是否三条
 export function isThreeOfAKind (cardGroup) {
     const countMap = _groupByAmount(cardGroup)
-    return countMap.some((name, amount) => amount === 3)
+    let isMatch = Object.entries(countMap).some(([name, amount]) => amount === 3)
+    let { maxArr } = _sortByAmount(countMap)
+    return { isMatch, maxArr }
 }
-// 是否两对
-export function isDoubleTwoOfAKind () {
-
+export function isDoubleTwoOfAKind (cardGroup) {
+    const countMap = _groupByAmount(cardGroup)
+    let { maxArr, numMap } = _sortByAmount(countMap)
+    let isMatch = numMap['2'] && numMap['2'].length === 2
+    return { isMatch, maxArr }
 }
-// 是否只有一对
-export function isSingleTwoOfAKind () {
-
+export function isSingleTwoOfAKind (cardGroup) {
+    const countMap = _groupByAmount(cardGroup)
+    let { maxArr, numMap } = _sortByAmount(countMap)
+    let isMatch = numMap['2'] && numMap['2'].length === 1
+    return { isMatch, maxArr }
 }
 
 function _groupByAmount (cardGroup) {
@@ -182,4 +207,19 @@ function _groupByAmount (cardGroup) {
         }
     })
     return countMap
+}
+function _sortByAmount (countMap) {
+    const numMap = {}
+    let maxArr = []
+    Object.entries(countMap).forEach(([cardNum, count]) => {
+        numMap[count] = numMap[count] || []
+        numMap[count].push(cardNum)
+    })
+    Object.keys(numMap).sort(compareNumber).reverse().forEach(value => {
+        maxArr = [...maxArr, ...numMap[value].sort(compareNumber).reverse()]
+    })
+    return { maxArr, numMap }
+}
+function compareNumber (a, b) {
+    return parseInt(a) - parseInt(b)
 }

@@ -24,7 +24,7 @@ export class Strategy {
         this.timer = setInterval(() => {
             time--
             this.players[this.tmpIndex].time = time
-            console.log(this.players[this.tmpIndex])
+            // console.log(this.players[this.tmpIndex])
         }, 1000)
     }
     clearTimer () {

@@ -6,15 +6,16 @@ export class Dealer {
     constructor ({ isJokerAdded, peopleNumber, difficulty }) {
         this.isJokerAdded = isJokerAdded
         this.peopleNumber = peopleNumber
-        this.restart()
+        this.stack = generateWholeCards(this.isJokerAdded)
+        // this.restart()
         // this.startGame()
     }
     startGame (index = 0) {
         // 公共牌
         this.publicCards = this.deliver({
-        split: 1,
-        each: 3
-      })[0]
+            split: 1,
+            each: 3
+        })[0]
         this.user = new Player({
             cards: this.deliver({ split: 1, each: 2 })[0],
             name: '玩家'
@@ -32,7 +33,6 @@ export class Dealer {
     }
 
     restart () {
-        this.stack = generateWholeCards(this.isJokerAdded)
         this.shuffle()
     }
 

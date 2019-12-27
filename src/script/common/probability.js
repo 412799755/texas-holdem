@@ -42,7 +42,12 @@ export default class Probability {
     }
     selectMaxFromCardGroupList (cardGroupList) {
         if (cardGroupList.length) {
-            return cardGroupList.sort(compare).reverse()[0]
+            let resultArr = cardGroupList.sort(compare)
+            // let b = resultArr.map(arr => {
+            //     return arr.map(item => item.num)
+            // })
+            // console.log(b)
+            return resultArr.reverse()[0]
         }
     }
 }

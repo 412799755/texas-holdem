@@ -1,7 +1,8 @@
 <template>
     <div>
       <select @change="change($event)">
-        <option v-for="(item,index) in options" :key="index" :name="name" :value="item.value" :checked="item.value === value" >{{item.name}}</option>
+        <option v-for="(item,index) in options" :key="index" :name="name" :value="item.value" :selected="item.value === value" >{{item.name}}
+        </option>
       </select>
     </div>
 </template>
